@@ -1,5 +1,5 @@
 //
-//  EmailContactRow.swift
+//  CurrentLocationRow.swift
 //  ___PACKAGENAME___
 //
 //  Created by ___FULLUSERNAME___ on ___DATE___
@@ -26,7 +26,7 @@ final class CurrentLocationRow: FieldRow<CurrentLocationCell>, RowType {
 }
 
 // Create the associated row cell
-open class CurrentLocationCell: EmailCell, CLLocationManagerDelegate {
+open class CurrentLocationCell: _FieldCell<String>, CellType, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     
     required public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
