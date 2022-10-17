@@ -14,7 +14,7 @@ import Eureka
 import QMobileUI
 
 // name of the format
-fileprivate let kCurrentLocation = "currentLocation"
+private let kCurrentLocation = "currentLocation"
 
 // Create an Eureka row for the format
 final class CurrentLocationRow: FieldRow<CurrentLocationCell>, RowType {
@@ -28,7 +28,7 @@ final class CurrentLocationRow: FieldRow<CurrentLocationCell>, RowType {
 // Create the associated row cell
 open class CurrentLocationCell: _FieldCell<String>, CellType, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
-    
+
     required public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
@@ -47,24 +47,17 @@ open class CurrentLocationCell: _FieldCell<String>, CellType, CLLocationManagerD
             self.locationManager.requestLocation()
         }
     }
-    
+
     open override func update() {
         self.textField.font = .italicSystemFont(ofSize: self.textField.font?.pointSize ?? 12)
     }
- 
+
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let locValue: CLLocationCoordinate2D = manager.location?.coordinate ?? locations.first?.coordinate {
             var value = ""
-            if locValue.latitude>0 {
-                value="+\(locValue.latitude)"
-            } else {
-                value="\(locValue.latitude)"
-            }
-            if locValue.longitude>0 {
-                value+="+\(locValue.longitude)"
-            } else {
-                value+="\(locValue.longitude)"
-            }
+            value+="\(locValue.latitude)".replacingOccurrences(of: ",", with: ".") // other way force local?
+            value+=", "
+            value+="\(locValue.longitude)".replacingOccurrences(of: ",", with: ".")
             self.row.value = value
             self.textField.text = value
         }
