@@ -39,13 +39,38 @@ open class CurrentLocationCell: _FieldCell<String>, CellType, CLLocationManagerD
 
     open override func setup() {
         super.setup()
-        self.isUserInteractionEnabled = false
+        // self.isUserInteractionEnabled = false
         locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             self.locationManager.delegate = self
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            self.locationManager.requestLocation()
+            if let value = self.row.value, !value.isEmpty {
+                self.textField.text = value
+            } else {
+                self.locationManager.requestLocation()
+            }
         }
+        self.textField.gestureRecognizers?.forEach { self.textField.removeGestureRecognizer($0) }
+        let textViewRecognizer = UITapGestureRecognizer()
+        textViewRecognizer.addTarget(self, action: #selector(touched))
+        self.textField.addGestureRecognizer(textViewRecognizer)
+        self.textField.delegate = self
+    }
+
+    override open func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return false
+    }
+
+    open override func cellCanBecomeFirstResponder() -> Bool {
+        return false
+    }
+
+    open override func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return false
+    }
+
+    @objc public func touched(textField: UITextField) {
+        self.locationManager.requestLocation()
     }
 
     open override func update() {
