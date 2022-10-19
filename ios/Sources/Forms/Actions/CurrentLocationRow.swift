@@ -39,14 +39,14 @@ open class CurrentLocationCell: _FieldCell<String>, CellType, CLLocationManagerD
 
     open override func setup() {
         super.setup()
-        // self.isUserInteractionEnabled = false
-        locationManager.requestWhenInUseAuthorization()
-        if CLLocationManager.locationServicesEnabled() {
-            self.locationManager.delegate = self
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            if let value = self.row.value, !value.isEmpty {
-                self.textField.text = value
-            } else {
+        if let value = self.row.value, !value.isEmpty {
+            self.textView.text = value
+        }
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        if self.row.value?.isEmpty ?? true {
+            if CLLocationManager.locationServicesEnabled() { // XXX dispatch in queue
                 self.locationManager.requestLocation()
             }
         }
