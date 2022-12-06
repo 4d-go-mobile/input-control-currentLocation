@@ -31,12 +31,11 @@ class CurrentLocation(private val view: View) : BaseKotlinInputControl {
 
     @Suppress("MissingPermission")
     private fun getLocation() {
-        val locationRequest = LocationRequest.create().apply {
-            interval = TimeUnit.SECONDS.toMillis(2)
-            fastestInterval = TimeUnit.SECONDS.toMillis(3)
-            maxWaitTime = TimeUnit.SECONDS.toMillis(3)
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-        }
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(2))
+            .setWaitForAccurateLocation(false)
+            .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(3))
+            .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(3))
+            .build()
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
