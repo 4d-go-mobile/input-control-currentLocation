@@ -18,6 +18,12 @@ import java.util.concurrent.TimeUnit
 @KotlinInputControl
 class CurrentLocation(private val view: View) : BaseKotlinInputControl {
 
+    companion object {
+        private const val intervalSec: Long = 2
+        private const val minIntervalSec: Long = 3
+        private const val maxIntervalSec: Long = 3
+    }
+
     override val autocomplete: Boolean = true
 
     private val rationaleString = "Permission required to access current location"
@@ -31,11 +37,12 @@ class CurrentLocation(private val view: View) : BaseKotlinInputControl {
 
     @Suppress("MissingPermission")
     private fun getLocation() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(2))
-            .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(3))
-            .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(3))
-            .build()
+        val locationRequest =
+            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(intervalSec))
+                .setWaitForAccurateLocation(false)
+                .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(minIntervalSec))
+                .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(maxIntervalSec))
+                .build()
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
