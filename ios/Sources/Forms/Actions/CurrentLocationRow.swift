@@ -40,7 +40,7 @@ open class CurrentLocationCell: _FieldCell<String>, CellType, CLLocationManagerD
     open override func setup() {
         super.setup()
         if let value = self.row.value, !value.isEmpty {
-            self.textView.text = value
+            self.textField.text = value
         }
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.delegate = self
